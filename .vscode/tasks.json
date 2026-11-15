@@ -4,21 +4,24 @@
     {
       "label": "Setup: create .venv and install dependencies",
       "type": "shell",
-      "command": "PY=$(command -v python3.13 || command -v python3.12 || command -v python3.11) || { echo 'Python 3.11+ is required (brew install python@3.12)'; exit 1; }; \"$PY\" -m venv .venv && .venv/bin/pip install -q --upgrade pip && .venv/bin/pip install -q -r requirements-dev.txt && ([ -f .env ] || cp .env.example .env) && echo \"Ready: $(.venv/bin/python --version)\"",
+      "command": "./scripts/setup.sh",
       "problemMatcher": []
     },
     {
       "label": "Run API (http://localhost:4000/docs)",
       "type": "shell",
-      "command": ".venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 4000 --reload",
+      "command": "[ -x .venv/bin/python ] || { echo 'No .venv yet: run the \"Setup: create .venv and install dependencies\" task first.'; exit 1; }; .venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 4000 --reload",
       "isBackground": true,
       "problemMatcher": []
     },
     {
       "label": "Quality checks: lint + types + tests",
       "type": "shell",
-      "command": ".venv/bin/ruff check app tests && .venv/bin/ruff format --check app tests && .venv/bin/mypy app && .venv/bin/pytest",
-      "group": { "kind": "test", "isDefault": true },
+      "command": "[ -x .venv/bin/python ] || { echo 'No .venv yet: run the \"Setup: create .venv and install dependencies\" task first.'; exit 1; }; .venv/bin/ruff check app tests && .venv/bin/ruff format --check app tests && .venv/bin/mypy app && .venv/bin/pytest",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
       "problemMatcher": []
     }
   ]

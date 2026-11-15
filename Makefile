@@ -1,7 +1,7 @@
 .PHONY: setup install run test lint typecheck check
 
 setup:
-	python3 -m venv .venv && .venv/bin/pip install -r requirements-dev.txt
+	./scripts/setup.sh
 
 install:
 	pip install -r requirements-dev.txt
