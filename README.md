@@ -73,29 +73,29 @@ curl -X POST http://localhost:4000/posting \
   -d '{"message": "Check out our latest business platform and grow your online visibility. https://example.com"}'
 ```
 
-**200 OK.** The message was processed, and each platform's outcome is in `results`:
+**200 OK.** The message was processed, and each platform's outcome is in `results` (real output, shortened):
 
 ```json
 {
   "success": true,
-  "summary": { "total": 7, "succeeded": 6, "failed": 1 },
+  "summary": { "total": 7, "succeeded": 5, "failed": 2 },
   "results": [
     {
-      "platform": "Mastodon",
+      "platform": "Bluesky",
       "status": "success",
-      "posted_url": "https://mastodon.social/@acme/113512345678901234",
+      "posted_url": "https://bsky.app/profile/wahabbalochk.bsky.social/post/3n2ezvdriu22t",
       "public_access": true,
-      "date": "2026-11-15",
-      "time": "10:30:00",
+      "date": "2026-11-16",
+      "time": "03:12:56",
       "error": null
     },
     {
       "platform": "Discord",
       "status": "success",
-      "posted_url": "https://discord.com/channels/1234/5678/9012",
+      "posted_url": "https://discord.com/channels/1571625595731968040/1571625596176572498/1571649227971494123",
       "public_access": false,
-      "date": "2026-11-15",
-      "time": "10:30:00",
+      "date": "2026-11-16",
+      "time": "03:12:56",
       "error": null
     },
     {
@@ -105,13 +105,13 @@ curl -X POST http://localhost:4000/posting \
       "public_access": false,
       "date": null,
       "time": null,
-      "error": "Authentication failed: HTTP 401: Unauthorized"
+      "error": "Platform not configured: set TELEGRAM_BOT_TOKEN"
     }
   ]
 }
 ```
 
-(Shortened example. [`docs/sample-run.md`](docs/sample-run.md) has real captured output.)
+All 7 results from that run are in [`docs/sample-run.md`](docs/sample-run.md).
 
 | Field | Meaning |
 |---|---|
