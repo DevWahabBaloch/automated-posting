@@ -1,19 +1,75 @@
 # Sample run
 
-Captured from a real local run (`uvicorn app.main:app --port 4000`) **before any credentials were configured**, so every platform reports the exact environment variables it needs. Add credentials to `.env` (see the README) to get live `success` results with real post URLs.
+Recorded with `scripts/demo_post.sh` on 2026-11-16 03:12 PKT against a local server
+(`uvicorn app.main:app --port 4000`). The `posted_url` values are live, public posts.
 
-## Requests and responses
+## Platforms
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H "Content-Type: application/json" -d '{"message": "Check out our latest business platform and grow your online visibility. https://example.com"}'
+```json
+[
+    {
+        "name": "Mastodon",
+        "configured": false,
+        "missing_settings": [
+            "MASTODON_ACCESS_TOKEN"
+        ],
+        "api_docs": "https://docs.joinmastodon.org/methods/statuses/#create"
+    },
+    {
+        "name": "Bluesky",
+        "configured": true,
+        "missing_settings": [],
+        "api_docs": "https://docs.bsky.app/docs/advanced-guides/posts"
+    },
+    {
+        "name": "Telegram",
+        "configured": false,
+        "missing_settings": [
+            "TELEGRAM_BOT_TOKEN"
+        ],
+        "api_docs": "https://core.telegram.org/bots/api#sendmessage"
+    },
+    {
+        "name": "Discord",
+        "configured": true,
+        "missing_settings": [],
+        "api_docs": "https://discord.com/developers/docs/resources/webhook#execute-webhook"
+    },
+    {
+        "name": "GitHub Gist",
+        "configured": true,
+        "missing_settings": [],
+        "api_docs": "https://docs.github.com/en/rest/gists/gists#create-a-gist"
+    },
+    {
+        "name": "DEV Community",
+        "configured": true,
+        "missing_settings": [],
+        "api_docs": "https://developers.forem.com/api/v1#tag/articles/operation/createArticle"
+    },
+    {
+        "name": "Hugging Face",
+        "configured": true,
+        "missing_settings": [],
+        "api_docs": "https://huggingface.co/docs/hub/api"
+    }
+]
 ```
+
+## Publishing a message
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "Automated multi-platform posting with FastAPI: one API call, many platforms. https://github.com/DevWahabBaloch/automated-posting"}'
+```
+
 ```json
 {
-    "success": false,
+    "success": true,
     "summary": {
         "total": 7,
-        "succeeded": 0,
-        "failed": 7
+        "succeeded": 5,
+        "failed": 2
     },
     "results": [
         {
@@ -27,12 +83,12 @@ $ curl -s -X POST http://localhost:4000/posting -H "Content-Type: application/js
         },
         {
             "platform": "Bluesky",
-            "status": "failed",
-            "posted_url": null,
-            "public_access": false,
-            "date": null,
-            "time": null,
-            "error": "Platform not configured: set BLUESKY_HANDLE, BLUESKY_APP_PASSWORD"
+            "status": "success",
+            "posted_url": "https://bsky.app/profile/wahabbalochk.bsky.social/post/3n2ezvdriu22t",
+            "public_access": true,
+            "date": "2026-11-16",
+            "time": "03:12:56",
+            "error": null
         },
         {
             "platform": "Telegram",
@@ -41,51 +97,57 @@ $ curl -s -X POST http://localhost:4000/posting -H "Content-Type: application/js
             "public_access": false,
             "date": null,
             "time": null,
-            "error": "Platform not configured: set TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID"
+            "error": "Platform not configured: set TELEGRAM_BOT_TOKEN"
         },
         {
             "platform": "Discord",
-            "status": "failed",
-            "posted_url": null,
+            "status": "success",
+            "posted_url": "https://discord.com/channels/1571625595731968040/1571625596176572498/1571649227971494123",
             "public_access": false,
-            "date": null,
-            "time": null,
-            "error": "Platform not configured: set DISCORD_WEBHOOK_URL"
+            "date": "2026-11-16",
+            "time": "03:12:56",
+            "error": null
         },
         {
             "platform": "GitHub Gist",
-            "status": "failed",
-            "posted_url": null,
-            "public_access": false,
-            "date": null,
-            "time": null,
-            "error": "Platform not configured: set GITHUB_TOKEN"
+            "status": "success",
+            "posted_url": "https://gist.github.com/DevWahabBaloch/1c238835926edb86304b96b7136e56e8",
+            "public_access": true,
+            "date": "2026-11-16",
+            "time": "03:12:57",
+            "error": null
         },
         {
             "platform": "DEV Community",
-            "status": "failed",
-            "posted_url": null,
-            "public_access": false,
-            "date": null,
-            "time": null,
-            "error": "Platform not configured: set DEVTO_API_KEY"
+            "status": "success",
+            "posted_url": "https://dev.to/devwahabbaloch/automated-multi-platform-posting-with-fastapi-one-api-call-many-platforms-1kfd",
+            "public_access": true,
+            "date": "2026-11-16",
+            "time": "03:12:55",
+            "error": null
         },
         {
             "platform": "Hugging Face",
-            "status": "failed",
-            "posted_url": null,
-            "public_access": false,
-            "date": null,
-            "time": null,
-            "error": "Platform not configured: set HUGGINGFACE_TOKEN, HUGGINGFACE_REPO_ID"
+            "status": "success",
+            "posted_url": "https://huggingface.co/datasets/wahabbaloch/announcements/blob/main/posts/2026/11/15/221255-797539ec.md",
+            "public_access": true,
+            "date": "2026-11-16",
+            "time": "03:12:55",
+            "error": null
         }
     ]
 }
 ```
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/json' -d '{"message": "No link in this message"}'
+## Validation errors
+
+### No CTA link
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "No link in this message"}'
 ```
+
 ```json
 {
     "success": false,
@@ -102,9 +164,13 @@ $ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/js
 }
 ```
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/json' -d '{"message": "Two links https://a.example and https://b.example"}'
+### More than one link
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "Two links https://a.example and https://b.example"}'
 ```
+
 ```json
 {
     "success": false,
@@ -121,9 +187,13 @@ $ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/js
 }
 ```
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/json' -d '{"message": "Local link https://localhost:8000"}'
+### Non-public host
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "Local link https://localhost:8000"}'
 ```
+
 ```json
 {
     "success": false,
@@ -140,9 +210,13 @@ $ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/js
 }
 ```
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/json' -d '{"message": "Bad scheme ftp://example.com/file"}'
+### Unsupported scheme
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "Bad scheme ftp://example.com/file"}'
 ```
+
 ```json
 {
     "success": false,
@@ -159,9 +233,13 @@ $ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/js
 }
 ```
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/json' -d '{"message": "Check out our platform https://example.com", "platforms": ["Discord"]}'
+### Caller tries to choose platforms
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "Our platform https://example.com", "platforms": ["Discord"]}'
 ```
+
 ```json
 {
     "success": false,
@@ -178,9 +256,13 @@ $ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/js
 }
 ```
 
-```console
-$ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/json' -d '{"message": "aaaa…(190 chars) https://example.com"}'
+### Over 200 characters
+
+```bash
+curl -X POST http://localhost:4000/posting -H "Content-Type: application/json" \
+  -d '{"message": "aaaa…(190 characters)… https://example.com"}'
 ```
+
 ```json
 {
     "success": false,
@@ -197,35 +279,3 @@ $ curl -s -X POST http://localhost:4000/posting -H 'Content-Type: application/js
 }
 ```
 
-## Server log
-
-Each line carries the request ID (also returned in the `X-Request-ID` response header), so all platform outcomes for one `/posting` call can be correlated.
-
-```text
-INFO:     Started server process [537]
-INFO:     Waiting for application startup.
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: Mastodon disabled – missing MASTODON_ACCESS_TOKEN
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: Bluesky disabled – missing BLUESKY_HANDLE, BLUESKY_APP_PASSWORD
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: Telegram disabled – missing TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: Discord disabled – missing DISCORD_WEBHOOK_URL
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: GitHub Gist disabled – missing GITHUB_TOKEN
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: DEV Community disabled – missing DEVTO_API_KEY
-2026-11-16 00:33:32,047 WARNING [-] app.platforms.registry: Hugging Face disabled – missing HUGGINGFACE_TOKEN, HUGGINGFACE_REPO_ID
-2026-11-16 00:33:32,047 INFO    [-] app.platforms.registry: Platforms enabled: none
-INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:4000 (Press CTRL+C to quit)
-2026-11-16 00:33:34,725 INFO    [a91dcd84ca91] app.main: POST /posting -> 422 (4 ms)
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: Mastodon: failed in 0 ms – Platform not configured: set MASTODON_ACCESS_TOKEN
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: Bluesky: failed in 0 ms – Platform not configured: set BLUESKY_HANDLE, BLUESKY_APP_PASSWORD
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: Telegram: failed in 0 ms – Platform not configured: set TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: Discord: failed in 0 ms – Platform not configured: set DISCORD_WEBHOOK_URL
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: GitHub Gist: failed in 0 ms – Platform not configured: set GITHUB_TOKEN
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: DEV Community: failed in 0 ms – Platform not configured: set DEVTO_API_KEY
-2026-11-16 00:33:34,740 WARNING [194146b79eff] app.services.posting_service: Hugging Face: failed in 0 ms – Platform not configured: set HUGGINGFACE_TOKEN, HUGGINGFACE_REPO_ID
-2026-11-16 00:33:34,741 INFO    [194146b79eff] app.services.posting_service: Posting run finished: 0/7 platforms succeeded
-2026-11-16 00:33:34,741 INFO    [194146b79eff] app.main: POST /posting -> 200 (1 ms)
-INFO:     Shutting down
-INFO:     Waiting for application shutdown.
-INFO:     Application shutdown complete.
-INFO:     Finished server process [537]
-```

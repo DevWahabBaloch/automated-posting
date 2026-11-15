@@ -17,12 +17,13 @@ A FastAPI service that validates a short message with a single call-to-action (C
 1. [Quick start](#quick-start)
 2. [API](#api)
 3. [Platform research and integrations](#platform-research-and-integrations)
-4. [Architecture](#architecture)
-5. [Key engineering decisions](#key-engineering-decisions)
-6. [Configuration](#configuration)
-7. [Testing and quality](#testing-and-quality)
-8. [Adding a new platform](#adding-a-new-platform)
-9. [Limitations and next steps](#limitations-and-next-steps)
+4. [Live verification](#live-verification)
+5. [Architecture](#architecture)
+6. [Key engineering decisions](#key-engineering-decisions)
+7. [Configuration](#configuration)
+8. [Testing and quality](#testing-and-quality)
+9. [Adding a new platform](#adding-a-new-platform)
+10. [Limitations and next steps](#limitations-and-next-steps)
 
 ---
 
@@ -49,7 +50,7 @@ The app starts with **no** credentials. Every platform is still listed in the re
 Open the folder in VS Code and install the recommended extensions when prompted. Then use **Terminal → Run Task…**:
 
 1. **Setup: create .venv and install dependencies** creates `.venv` with Python 3.11+ and copies `.env.example` to `.env`.
-2. **Run API (http://localhost:4000/docs)** starts Uvicorn with auto-reload. Alternatively, press **F5** and choose *Run API (port 4000)* to debug with breakpoints.
+2. **Run API (http://localhost:4000/docs)** starts Uvicorn with auto-reload. **Stop API (free port 4000)** stops it. Alternatively, press **F5** and choose *Run API (port 4000)* to debug with breakpoints.
 3. **Quality checks: lint + types + tests** runs ruff, mypy and pytest.
 4. **Demo: publish a real post and record docs/sample-run.md** posts one message through the running API to every configured platform and saves the request, the response and validation examples as evidence.
 
@@ -209,6 +210,22 @@ The brief mentions *supported LLM platforms*. Model APIs (OpenAI, Anthropic, Gem
 | Facebook / Instagram | Graph API publishing requires Meta app review and a business page or account |
 | Medium | Publishing API is deprecated, and new integration tokens are no longer issued |
 | Slack (webhooks) | Posts to a private workspace with no public permalink |
+
+## Live verification
+
+The integrations were run against the real platforms with `scripts/demo_post.sh` (VS Code task **Demo**). Full request and response: [`docs/sample-run.md`](docs/sample-run.md).
+
+| Platform | Result | Published content |
+|---|---|---|
+| Bluesky | ✅ public | [bsky.app/profile/wahabbalochk.bsky.social/post/3n2ezvdriu22t](https://bsky.app/profile/wahabbalochk.bsky.social/post/3n2ezvdriu22t) |
+| GitHub Gist | ✅ public | [gist.github.com/DevWahabBaloch/1c2388…](https://gist.github.com/DevWahabBaloch/1c238835926edb86304b96b7136e56e8) |
+| DEV Community | ✅ public | [dev.to/devwahabbaloch/automated-multi-platform-posting…](https://dev.to/devwahabbaloch/automated-multi-platform-posting-with-fastapi-one-api-call-many-platforms-1kfd) |
+| Hugging Face | ✅ public | [huggingface.co/datasets/wahabbaloch/announcements](https://huggingface.co/datasets/wahabbaloch/announcements/blob/main/posts/2026/11/15/221255-797539ec.md) |
+| Discord | ✅ members-only | Posted to a server channel; Discord messages are visible only to server members, so `public_access` is `false` |
+| Mastodon | ⚪ not configured | Implemented and tested against the API contract. Live run pending: sign-ups on mastodon.social are blocked from the network this was run on. Any Mastodon server works via `MASTODON_BASE_URL` |
+| Telegram | ⚪ not configured | Implemented and tested against the API contract. Telegram is not accessible from the region this was run in |
+
+Unconfigured platforms are still reported in every response with the exact variables they need, so enabling one is a configuration change, not a code change.
 
 ---
 
