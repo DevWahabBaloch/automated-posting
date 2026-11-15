@@ -1,5 +1,7 @@
 # Automated Multi-Platform Posting API
 
+[![CI](https://github.com/DevWahabBaloch/automated-posting/actions/workflows/ci.yml/badge.svg)](https://github.com/DevWahabBaloch/automated-posting/actions/workflows/ci.yml)
+
 A FastAPI service that validates a short message with a single call-to-action (CTA) link and publishes it **concurrently** to **7 third-party platforms** through their official APIs. It returns a per-platform report with the post URL, whether the post is publicly accessible, and the posting date and time.
 
 | | |
@@ -27,7 +29,7 @@ A FastAPI service that validates a short message with a single call-to-action (C
 ## Quick start
 
 ```bash
-git clone https://github.com/<your-username>/automated-posting.git
+git clone https://github.com/DevWahabBaloch/automated-posting.git
 cd automated-posting
 
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
