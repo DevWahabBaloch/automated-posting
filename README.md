@@ -51,6 +51,7 @@ Open the folder in VS Code and install the recommended extensions when prompted.
 1. **Setup: create .venv and install dependencies** creates `.venv` with Python 3.11+ and copies `.env.example` to `.env`.
 2. **Run API (http://localhost:4000/docs)** starts Uvicorn with auto-reload. Alternatively, press **F5** and choose *Run API (port 4000)* to debug with breakpoints.
 3. **Quality checks: lint + types + tests** runs ruff, mypy and pytest.
+4. **Demo: publish a real post and record docs/sample-run.md** posts one message through the running API to every configured platform and saves the request, the response and validation examples as evidence.
 
 **Docker**
 

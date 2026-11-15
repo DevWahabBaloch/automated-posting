@@ -23,6 +23,12 @@
         "isDefault": true
       },
       "problemMatcher": []
+    },
+    {
+      "label": "Demo: publish a real post and record docs/sample-run.md",
+      "type": "shell",
+      "command": "./scripts/demo_post.sh",
+      "problemMatcher": []
     }
   ]
 }
