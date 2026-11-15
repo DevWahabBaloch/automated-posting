@@ -6,7 +6,7 @@ A FastAPI service that validates a short message with a single call-to-action (C
 |---|---|
 | **Stack** | Python 3.11+, FastAPI, Uvicorn, Pydantic v2, pydantic-settings, HTTPX |
 | **Platforms** | Mastodon · Bluesky · Telegram · Discord · GitHub Gist · DEV Community · Hugging Face |
-| **Quality gates** | 68 tests (pytest + respx) · `ruff` lint/format · `mypy --strict` · GitHub Actions CI on 3.11–3.13 |
+| **Quality gates** | 68 tests (pytest + respx) · `ruff` lint/format · `mypy --strict` · GitHub Actions CI on 3.11–3.14 |
 
 ---
 
@@ -254,7 +254,7 @@ automated-posting/
 │       └── links.py             # CTA link extraction and URL validation
 ├── tests/                       # 68 tests: validation, service, adapters, API
 ├── docs/sample-run.md           # captured requests, responses and logs
-├── .github/workflows/ci.yml     # lint + types + tests on Python 3.11–3.13
+├── .github/workflows/ci.yml     # lint + types + tests on Python 3.11–3.14
 ├── .env.example  requirements.txt  requirements-dev.txt
 ├── Dockerfile  Makefile  pyproject.toml
 ```
@@ -347,7 +347,7 @@ mypy app
 | `test_platforms.py` | Each adapter against a mocked provider API (`respx`): request shape, headers, auth, permalinks, Bluesky facets and session refresh, Discord mention safety, Telegram chat types, Hugging Face NDJSON, plus retry and error mapping |
 | `test_api.py` | Exact response contract, error envelope, malformed JSON, forbidden `platforms` field, 404 envelope, real registry with no credentials |
 
-No test touches the network. CI runs the full gate on Python 3.11, 3.12 and 3.13.
+No test touches the network. CI runs the full gate on Python 3.11, 3.12, 3.13 and 3.14.
 
 ---
 
